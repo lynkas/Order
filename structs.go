@@ -34,6 +34,7 @@ type SingleItem struct {
 type Item struct {
 	bongo.DocumentBase `bson:",inline"`
 	Name string `json:"name"`
+	Class string `json:"class"`
 	DefaultUnit string `json:"default_unit"`
 }
 
