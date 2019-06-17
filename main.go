@@ -6,7 +6,7 @@ import (
 )
 
 var config = &bongo.Config{
-	ConnectionString: "127.0.0.1",
+	ConnectionString: "0.0.0.0",
 	Database:         "test",
 }
 
