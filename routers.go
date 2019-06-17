@@ -9,19 +9,21 @@ func routers() *gin.Engine {
 			"message": "pong",
 		})
 	})
+	api:=r.Group("/api")
+	api.GET("/unit", getUnit)
+	api.GET("/item", getItem)
+	api.POST("/order", postOrder)
+	api.POST("/register", register)
 
-	r.GET("/unit", getUnit)
-	r.GET("/item", getItem)
-	r.POST("/order", postOrder)
-	r.POST("/register", register)
+	admin:=r.Group("/"+Info.Admin)
 
-	r.GET("/unprocessed", getUnprocessed)
-	r.POST("/addunit", addUnit)
-	r.POST("/additem", addItem)
-	r.POST("/done", orderDone)
-
-
-
+	admin.GET("/unprocessed", getUnprocessed)
+	admin.GET("/findbyphone", findByPhone)
+	admin.POST("/addunit", addUnit)
+	admin.POST("/additem", addItem)
+	admin.POST("/done", orderDone)
+	admin.POST("/removeitem", removeItem)
+	admin.POST("/removeunit", removeUnit)
 
 	return r
 }

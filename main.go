@@ -17,6 +17,13 @@ var All struct{
 
 
 func main() {
+
+	basicInfo()
+	config = &bongo.Config{
+		ConnectionString: Info.DatabaseUrl,
+		Database:         Info.Database,
+	}
+
 	var err error
 	All.Connection, err = bongo.Connect(config)
 	if err != nil {

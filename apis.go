@@ -161,8 +161,6 @@ func register(c *gin.Context)  {
 //
 //}
 
-
-
 func hasUser(c *gin.Context) (bool,string){
 	user := &UserLogin{}
 	err:=c.ShouldBindBodyWith(user,binding.JSON)
@@ -264,5 +262,93 @@ func orderDone(c *gin.Context)  {
 
 }
 
+func removeUnit(c *gin.Context)  {
+	id := &OrderID{}
+	err:=c.ShouldBindBodyWith(id,binding.JSON)
+	if err!=nil {
+		c.JSON(http.StatusBadRequest,gin.H{"message":"错误16"})
+		c.Abort()
+		return
+	}
+	b:=All.Connection.Collection(UNIT)
+	unit := &Unit{}
+	if !bson.IsObjectIdHex(id.Id){
+		c.JSON(http.StatusBadRequest,gin.H{"message":"错误17"})
+		c.Abort()
+		return
+	}
+	err=b.FindById(bson.ObjectIdHex(id.Id),unit)
+	if _, ok := err.(*bongo.DocumentNotFoundError); ok {
+		fmt.Println("document not found")
+	}
+	if err!=nil {
+		fmt.Println(err.Error())
+		c.JSON(http.StatusBadRequest,gin.H{"message":"错误18"})
+		c.Abort()
+		return
+	}
+
+	err=b.DeleteDocument(unit)
+	if err!=nil {
+		c.JSON(http.StatusBadRequest,gin.H{"message":"错误19"})
+		c.Abort()
+		return
+	}
+	c.JSON(http.StatusOK,gin.H{"message":"成功"})
+	c.Abort()
+	return
+}
 
 
+func removeItem(c *gin.Context)  {
+	id := &OrderID{}
+	err:=c.ShouldBindBodyWith(id,binding.JSON)
+	if err!=nil {
+		c.JSON(http.StatusBadRequest,gin.H{"message":"错误20"})
+		c.Abort()
+		return
+	}
+	b:=All.Connection.Collection(ITEM)
+	item := &Item{}
+	if !bson.IsObjectIdHex(id.Id){
+		c.JSON(http.StatusBadRequest,gin.H{"message":"错误21"})
+		c.Abort()
+		return
+	}
+	err=b.FindById(bson.ObjectIdHex(id.Id),item)
+	if _, ok := err.(*bongo.DocumentNotFoundError); ok {
+		fmt.Println("document not found")
+	}
+	if err!=nil {
+		fmt.Println(err.Error())
+		c.JSON(http.StatusBadRequest,gin.H{"message":"错误22"})
+		c.Abort()
+		return
+	}
+
+	err=b.DeleteDocument(item)
+	if err!=nil {
+		c.JSON(http.StatusBadRequest,gin.H{"message":"错误23"})
+		c.Abort()
+		return
+	}
+	c.JSON(http.StatusOK,gin.H{"message":"成功"})
+	c.Abort()
+	return
+}
+
+func findByPhone (c *gin.Context)  {
+	tel:=c.Param("tel")
+	b:=All.Connection.Collection(ORDER)
+	results:=b.Find(bson.M{"tel":tel})
+	order:=&Order{}
+	orders:=[]*Order{}
+	for results.Next(order) {
+		orders=append(orders, order)
+		order=&Order{}
+	}
+
+	c.JSON(200, orders)
+	c.Abort()
+	return
+}
