@@ -352,3 +352,79 @@ func findByPhone (c *gin.Context)  {
 	c.Abort()
 	return
 }
+
+func getClass(c *gin.Context)  {
+	b:=All.Connection.Collection(CLASS)
+	results:=b.Find(bson.M{})
+
+	class:=&Class{}
+	classes:=[]*Class{}
+	for results.Next(class) {
+		classes=append(classes, class)
+		class=&Class{}
+	}
+
+	c.JSON(200, classes)
+	c.Abort()
+	return
+}
+
+func addClass(c *gin.Context)  {
+
+	class:=&Class{}
+	err:=c.ShouldBindBodyWith(class,binding.JSON)
+	if err!=nil {
+		c.JSON(http.StatusBadRequest,gin.H{"message":"错误24"})
+		c.Abort()
+		return
+	}
+	b:=All.Connection.Collection(CLASS)
+
+	err=b.Save(class)
+	if err!=nil {
+		c.JSON(http.StatusBadRequest,gin.H{"message":"错误25"})
+		c.Abort()
+		return
+	}
+	c.JSON(200, gin.H{"message":"成功"})
+	c.Abort()
+	return
+}
+
+func removeClass(c *gin.Context)  {
+
+	id:=&OrderID{}
+	err:=c.ShouldBindBodyWith(id,binding.JSON)
+	if err!=nil {
+		c.JSON(http.StatusBadRequest,gin.H{"message":"错误26"})
+		c.Abort()
+		return
+	}
+	b:=All.Connection.Collection(CLASS)
+
+	if !bson.IsObjectIdHex(id.Id){
+		c.JSON(http.StatusBadRequest,gin.H{"message":"错误27"})
+		c.Abort()
+		return
+	}
+	class :=&Class{}
+	err=b.FindById(bson.ObjectIdHex(id.Id),class)
+	if _, ok := err.(*bongo.DocumentNotFoundError); ok {
+		fmt.Println("document not found")
+	}
+	if err!=nil {
+		c.JSON(http.StatusBadRequest,gin.H{"message":"错误28"})
+		c.Abort()
+		return
+	}
+	err=b.DeleteDocument(class)
+	if err!=nil {
+		c.JSON(http.StatusBadRequest,gin.H{"message":"错误29"})
+		c.Abort()
+		return
+	}
+	c.JSON(200, gin.H{"message":"成功"})
+	c.Abort()
+	return
+}
+

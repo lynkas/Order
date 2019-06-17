@@ -12,6 +12,7 @@ func routers() *gin.Engine {
 	api:=r.Group("/api")
 	api.GET("/unit", getUnit)
 	api.GET("/item", getItem)
+	api.GET("/class", getClass)
 	api.POST("/order", postOrder)
 	api.POST("/register", register)
 
@@ -24,6 +25,8 @@ func routers() *gin.Engine {
 	admin.POST("/done", orderDone)
 	admin.POST("/removeitem", removeItem)
 	admin.POST("/removeunit", removeUnit)
+	admin.POST("/addclass", addClass)
+	admin.POST("/removeclass", removeClass)
 
 	return r
 }

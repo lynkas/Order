@@ -4,6 +4,7 @@ import "github.com/go-bongo/bongo"
 
 const UNIT  = "unit"
 const ORDER = "order"
+const CLASS = "class"
 const ITEM = "item"
 const USER = "user"
 const RESTAURANT = "restaurant"
@@ -40,9 +41,14 @@ type Item struct {
 
 type Unit struct {
 	bongo.DocumentBase `bson:",inline"`
-
 	Name string `json:"name"`
 }
+
+type Class struct {
+	bongo.DocumentBase `bson:",inline"`
+	Name string `json:"name"`
+}
+
 type UserLogin struct {
 	bongo.DocumentBase `bson:",inline"`
 	Tel string `json:"tel"`
